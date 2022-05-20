@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     context = engine.rootContext()
     controler = Control()
-    context.setContextProperty("_Control",controler)
+    context.setContextProperty("_Control", controler)
 
     engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/led.qml"))
 
