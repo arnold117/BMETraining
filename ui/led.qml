@@ -44,7 +44,7 @@ ApplicationWindow {
                 top:contains.top
             }
             height: 100
-            source: "../res/led-on.svg"
+            source: "../resources/led-on.svg"
         }
 
         Rectangle{
@@ -85,7 +85,7 @@ ApplicationWindow {
 
         Image{
             id:stateOff
-            source: "../res/led-off.svg"
+            source: "../resources/led-off.svg"
             height: 100
             anchors{
                 left: stateOn.right
