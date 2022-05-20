@@ -15,6 +15,27 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
+     menuBar: MenuBar{
+        Menu {
+            title: "File";
+            MenuItem{
+                text: "Exit";
+                onTriggered: Qt.quit();
+            }
+        }
+        Menu {
+            title: "Help";
+            MenuItem{
+                text: "About";
+                onTriggered: root.showAbout();
+            }
+            MenuItem{
+                text: "Website";
+                onTriggered: Qt.openUrlExternally("https://dotponder.github.io/");
+            }
+        }
+    }
+
     Text {
         id: info
         color: "#cfcdcd"

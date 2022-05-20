@@ -26,7 +26,7 @@ if __name__ == "__main__":
     controler = Control()
     context.setContextProperty("_Control", controler)
 
-    engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/led.qml"))
+    engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/main.qml"))
 
     if not engine.rootObjects():
         sys.exit(-1)
