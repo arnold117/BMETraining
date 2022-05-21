@@ -12,7 +12,6 @@ from PySide6.QtCore import Qt, QObject, Slot
 
 import PCT
 
-
 class Control(QObject):
     def __init__(self):
         super().__init__()
@@ -22,14 +21,6 @@ class Control(QObject):
         self.path_open = None
         self.path_save = None
         self.pct = PCT.PCT()
-
-    def data_process(self):
-        if self.pct_data_read:
-            for index, row in self.pct_data.iterrows():
-                rowArr = self.pct_data.loc[index].values
-                # TODO: ADD SPLIT AND PROCESS
-        else:
-            tkinter.messagebox.showerror('Error', 'No data loaded!')
 
     @Slot()
     def open_file(self):
