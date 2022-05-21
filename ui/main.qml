@@ -20,15 +20,11 @@ ApplicationWindow {
             title: "File";
             MenuItem{
                 text: "Exit";
-                onTriggered: Qt.quit();
+                onTriggered: Qt.exit(0);
             }
         }
         Menu {
             title: "Help";
-            MenuItem{
-                text: "About";
-                onTriggered: root.showAbout();
-            }
             MenuItem{
                 text: "Website";
                 onTriggered: Qt.openUrlExternally("https://dotponder.github.io/");
