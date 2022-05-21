@@ -1,3 +1,4 @@
 pyside6
 python-lsp-server[all]
+numpy
 pandas
