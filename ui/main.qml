@@ -20,12 +20,12 @@ ApplicationWindow {
         Menu {
             title: "File";
             MenuItem{
-                text: "Open File";
-                onTriggered: _Control.openFile();
+                text: "Open CSV File";
+                onTriggered: _Control.open_file();
             }
             MenuItem{
                 text: "Save File";
-                onTriggered: _Control.saveFile();
+                onTriggered: _Control.save_file();
             }
             MenuItem{
                 text: "Exit";

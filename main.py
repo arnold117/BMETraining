@@ -4,6 +4,7 @@ import sys
 
 import tkinter as tk
 import tkinter.filedialog
+import tkinter.messagebox
 
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
@@ -13,23 +14,43 @@ import PCT
 
 
 class Control(QObject):
-    @Slot()
-    def ledOn(self):
-        print("led on")
+    def __init__(self):
+        super().__init__()
+
+        self.pct_data_read = False
+        self.pct_data = None
+        self.path_open = None
+        self.path_save = None
+        self.pct = PCT.PCT()
+
+    def data_process(self):
+        if self.pct_data_read:
+            for index, row in self.pct_data.iterrows():
+                rowArr = self.pct_data.loc[index].values
+                # TODO: ADD SPLIT AND PROCESS
+        else:
+            tkinter.messagebox.showerror('Error', 'No data loaded!')
 
     @Slot()
-    def ledOff(self):
-        print("led off")
+    def open_file(self):
+        self.path_open = tk.filedialog.askopenfilename(filetypes=(("csv files", "*.csv"),))
+        print(self.path_open)
+        self.pct_data = self.pct.read_packed_csv(self.path_open)
+        try:
+            if self.pct_data == [0, 0, 0, 0, 0, 0, 0, 0]:
+                self.pct_data = self.pct.read_unpacked_csv(self.path_open)
+            if self.pct_data == [0, 0, 0, 0, 0, 0, 0, 0]:
+                tkinter.messagebox.showerror('Error', 'This is neither a packed PCT CSV nor'
+                                                      'an unpacked PCT CSV!')
+        except ValueError:
+            self.pct_data_read = True
+            self.data_process()
 
     @Slot()
-    def openFile(self):
-        f_path = tk.filedialog.askopenfilename()
-        print('\n获取的文件地址：', f_path)
-
-    @Slot()
-    def saveFile(self):
-        path_save = tkinter.filedialog.asksaveasfilename(initialfile='saved_data.csv', filetypes=[("CSV Files", ".csv")])
-        print(path_save)
+    def save_file(self):
+        self.path_save = tkinter.filedialog.asksaveasfilename(initialfile='saved_data.csv',
+                                                              filetypes=[("CSV Files", ".csv")])
+        print(self.path_save)
 
 
 if __name__ == "__main__":
@@ -41,10 +62,10 @@ if __name__ == "__main__":
     root.withdraw()
 
     context = engine.rootContext()
-    controler = Control()
-    context.setContextProperty("_Control", controler)
+    control = Control()
+    context.setContextProperty("_Control", control)
 
-    engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/draw.qml"))
+    engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/main.qml"))
 
     if not engine.rootObjects():
         sys.exit(-1)
