@@ -23,6 +23,10 @@ class Control(QObject):
         self.pct = PCT.PCT()
 
     @Slot()
+    def about_page(self):
+        tkinter.messagebox.showinfo('About', 'Copyright (c) 2022 Arnold Chow, All rights reserved')
+
+    @Slot()
     def open_file(self):
         self.path_open = tk.filedialog.askopenfilename(filetypes=(("csv files", "*.csv"),))
         print(self.path_open)
