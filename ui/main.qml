@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Window 2.11
 import QtQuick.Controls 2.4
+import QtCharts 2.0
 // TODO: Add GUI!
 
 ApplicationWindow {
@@ -18,6 +19,14 @@ ApplicationWindow {
      menuBar: MenuBar{
         Menu {
             title: "File";
+            MenuItem{
+                text: "Open File";
+                onTriggered: _Control.openFile();
+            }
+            MenuItem{
+                text: "Save File";
+                onTriggered: _Control.saveFile();
+            }
             MenuItem{
                 text: "Exit";
                 onTriggered: Qt.exit(0);
@@ -91,40 +100,6 @@ ApplicationWindow {
             }
         }
 
-        Rectangle{
-            id: ledOff
-            color: "#3061e0"
-            radius: 20
-            width: 140
-            height: 40
-            Text {
-                id:txOff
-                color: "#dbdbdb"
-                text: qsTr("Off")
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: 32
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-
-            }
-            anchors{
-                top:stateOff.bottom
-                topMargin: 30
-                horizontalCenter: stateOff.horizontalCenter
-            }
-            MouseArea{
-                anchors.fill: parent
-                onPressed: {
-                    ledOff.color = "#f0f0f0"
-                }
-                onReleased: {
-                    ledOff.color = "#3061e0"
-                }
-                onClicked: {
-                    _Control.ledOff();
-                }
-            }
-        }
     }
 
 }

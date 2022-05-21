@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import QtCharts 6.2
+import QtCharts 2.0
 
 Window {
     width: 740
