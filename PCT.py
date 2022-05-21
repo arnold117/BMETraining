@@ -8,6 +8,81 @@ class PCT:
     def __init__(self):
         print("Init")
 
+    def join_hex(self, data_high, data_low):
+        return (data_high << 8) | data_low
+
+    def data_split(self, arr):
+        if arr[0] == 0x10:
+            if arr[1] == 0x02:
+                data_type = "DAT_EEG_WAVE"
+                ECG1_wave = self.join_hex(arr[2], arr[3])
+                ECG2_wave = self.join_hex(arr[4], arr[5])
+                ECG_status = arr[6]
+            if arr[1] == 0x03:
+                data_type = "DAT_EEG_LEAD"
+                lead_info = arr[2]
+                overload_warning = arr[3]
+            if arr[1] == 0x04:
+                data_type = "DAT_EEG_HR"
+                heart_rate = self.join_hex(arr[2], arr[3])
+
+        if arr[0] == 0x11:
+            if arr[1] == 0x02:
+                data_type = "DAT_RESP_WAVE"
+                respiration_wave_data1 = arr[2]
+                respiration_wave_data2 = arr[3]
+                respiration_wave_data3 = arr[4]
+                respiration_wave_data4 = arr[5]
+                respiration_wave_data5 = arr[6]
+
+            if arr[1] == 0x03:
+                data_type = "DAT_RESP_LEAD"
+                respiration_rate = self.join_hex(arr[2], arr[3])
+
+        if arr[0] == 0x12:
+            if arr[1] == 0x02:
+                data_type = "DAT_TEMP_DATA"
+                temperature_sensor_status = arr[2]
+                temperature_channel1 = self.join_hex(arr[3], arr[4])
+                temperature_channel2 = self.join_hex(arr[5], arr[6])
+
+        if arr[0] == 0x13:
+            if arr[1] == 0x02:
+                data_type = "DAT_SPO2_WAVE"
+                o2_wave_data1 = arr[2]
+                o2_wave_data2 = arr[3]
+                o2_wave_data3 = arr[4]
+                o2_wave_data4 = arr[5]
+                o2_wave_data5 = arr[6]
+                o2_measure_status = arr[7]
+
+            if arr[1] == 0x03:
+                data_type = "DAT_SPO2_DATA"
+                o2_saturate_info = arr[2]
+                pulse_rate = self.join_hex(arr[3], arr[4])
+                o2_saturate_data = arr[5]
+
+        if arr[0] == 0x14:
+            if arr[1] == 0x02:
+                data_type = "DAT_NBP_CUFPRE"
+                cuff_pressure = self.join_hex(arr[2], arr[3])
+                cuff_type_error = arr[4]
+                measure_type = arr[5]
+
+            if arr[1] == 0x03:
+                data_type = "DAT_NBP_END"
+                measure_type = arr[2]
+
+            if arr[1] == 0x04:
+                data_type = "DAT_NBP_RSLT1"
+                systolic_pressure = self.join_hex(arr[2], arr[3])
+                diastolic_pressure = self.join_hex(arr[4], arr[5])
+                mean_artery_pressure = self.join_hex(arr[6], arr[7])
+
+            if arr[1] == 0x05:
+                data_type = "DAT_NBP_RSLT2"
+                pulse_rate = self.join_hex(arr[2], arr[3])
+
     def unpack(self, packed):
         check_sum = packed[0]
         data_head = packed[1]
