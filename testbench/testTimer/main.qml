@@ -34,8 +34,8 @@ ApplicationWindow {
         id: timer
         interval: 500; running: false; repeat: true
         onTriggered: dataModel.update_serie(serie)
-
     }
+    
     ChartView {
         anchors.fill: parent
         id: bscan0

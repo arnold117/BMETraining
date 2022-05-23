@@ -56,6 +56,15 @@ ApplicationWindow {
         target: _Control
 
         // Signal Handler
+        onRespirationWaveRes: {
+            _Control.update_respiration_series(respSeries)
+        }
+
+        onRespirationRateRes: {
+            respRate.text = getRespirationRate
+        }
+
+
         onCuffPressureRes: {
             cuffPreasure.text = getCuffPressure
         }
@@ -134,7 +143,7 @@ ApplicationWindow {
             }
 
             LineSeries {
-                id:lineSeries1
+                id: ecg1Series
                 axisX: myAxisX1
                 axisY: myAxisY1
                 name: "LineSeries"
@@ -184,7 +193,7 @@ ApplicationWindow {
             }
 
             LineSeries {
-                id:lineSeries
+                id: ecg2Series
                 axisX: myAxisX
                 axisY: myAxisY
                 name: "LineSeries"
@@ -233,7 +242,7 @@ ApplicationWindow {
             }
 
             LineSeries {
-                id:lineSeries2
+                id: spo2Series
                 axisX: myAxisX2
                 axisY: myAxisY2
                 name: "LineSeries"
@@ -256,15 +265,15 @@ ApplicationWindow {
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
-            animationOptions: ChartView.SeriesAnimations
+            // animationOptions: ChartView.SeriesAnimations
             legend{
                 visible: false
             }
 
             ValueAxis {
-                id: myAxisX3
+                id: respAxisX
                 min: 0
-                max: 10
+                max: 1000
                 tickCount: 11
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -272,9 +281,9 @@ ApplicationWindow {
                 labelFormat: '%d'
                 }
             ValueAxis{
-                id:myAxisY3
-                min:0
-                max:300
+                id: respAxisY
+                min: 50
+                max: 200
                 tickCount: 6
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -283,9 +292,9 @@ ApplicationWindow {
             }
 
             LineSeries {
-                id:lineSeries3
-                axisX: myAxisX3
-                axisY: myAxisY3
+                id: respSeries
+                axisX: respAxisX
+                axisY: respAxisY
                 name: "LineSeries"
                 color: "#00ffff"
                 width: 3
@@ -422,7 +431,7 @@ ApplicationWindow {
 
         Text {
             id: nbpMethod
-            x: 3
+            x: 5
             y: 130
             width: 63
             height: 35
@@ -541,15 +550,15 @@ ApplicationWindow {
             y: 0
             width: 87
             height: 28
-            text: qsTr("呼吸 bpm")
+            text: qsTr("Respiration")
             font.pixelSize: 12
         }
 
         Text {
-            id: textEdit7
+            id: respRate
             x: 0
             y: 43
-            width: 87
+            width: 34
             height: 73
             text: qsTr("--")
             horizontalAlignment: Text.AlignLeft
@@ -624,6 +633,16 @@ ApplicationWindow {
             width: 66
             height: 38
             text: qsTr("T2 Disconnected")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element7
+            x: 40
+            y: 73
+            width: 40
+            height: 25
+            text: qsTr("bpm")
             font.pixelSize: 12
         }
     }

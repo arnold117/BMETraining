@@ -7,6 +7,7 @@ import tkinter.filedialog
 import tkinter.messagebox
 
 from threading import Timer
+from turtle import st
 
 from PySide6 import QtCharts
 from PySide6.QtWidgets import QApplication
@@ -17,6 +18,9 @@ import PCT
 
 
 class Control(QObject):
+    respirationWaveRes = Signal(str, arguments=['getRespirationWave'])
+    respirationRateRes = Signal(str, arguments=['getRespirationRate'])
+
     cuffPressureRes = Signal(str, arguments=['getCuffPressure'])
     nbpMethodRes = Signal(str, arguments=['getNbpMethod'])
     pressureRes = Signal(str, arguments=['getPressure'])
@@ -41,6 +45,8 @@ class Control(QObject):
         self.pct = PCT.PCT()
 
         self.timer.timeout.connect(self.data_process)
+        self.respiration_wave = []
+        self.respiration_wave_x = 0
 
     @Slot()
     def join_hex(self, data_high, data_low):
@@ -53,6 +59,18 @@ class Control(QObject):
     @Slot(QtCharts.QXYSeries)
     def update_series(self, series, dat):
         series.replace(dat)
+
+    @Slot(str)
+    def set_respiration_wave(self):
+        self.respirationWaveRes.emit("Triggered")
+
+    @Slot(QtCharts.QXYSeries)
+    def update_respiration_series(self, series):
+        series.replace(self.respiration_wave)
+
+    @Slot(str)
+    def set_respiration_rate(self, arg):
+        self.respirationRateRes.emit(arg)
 
     @Slot(str)
     def set_cuff_pressure(self, arg):
@@ -120,21 +138,25 @@ class Control(QObject):
         if arr[0] == 0x11:
             if arr[1] == 0x02:
                 data_type = "DAT_RESP_WAVE"
-                respiration_wave_data1 = arr[2]
-                respiration_wave_data2 = arr[3]
-                respiration_wave_data3 = arr[4]
-                respiration_wave_data4 = arr[5]
-                respiration_wave_data5 = arr[6]
+                respiration_wave_data = []
+                i = 2
+                while i < 7:
+                    respiration_wave_data.append(arr[i])
+                    point = QPointF(self.respiration_wave_x, arr[i])
+                    self.respiration_wave.append(point)
+                    i += 1
+                    self.respiration_wave_x += 1
+                self.set_respiration_wave()
 
-                # i = 2
-                # while i < 7:
-                #     self.split_data.resp.respiration_wave_data.append(arr[i])
-                #     i += 1
+                if self.respiration_wave_x >= 1000:
+                    self.respiration_wave_x = 0
+                    self.respiration_wave = []
+
             if arr[1] == 0x03:
-                data_type = "DAT_RESP_LEAD"
+                data_type = "DAT_RESP_RR"
                 respiration_rate = self.join_hex(arr[2], arr[3])
 
-                # self.split_data.resp.respiration_rate.append(respiration_rate)
+                self.set_respiration_rate(str(respiration_rate))
 
         if arr[0] == 0x12:
             if arr[1] == 0x02:
@@ -231,7 +253,7 @@ class Control(QObject):
                 arr = list(map(int, arr))
                 self.data_array.append(arr)
             self.data_count = len(self.pct_data)
-            self.timer.start(50)
+            self.timer.start(10)
 
     @Slot()
     def save_file(self):
