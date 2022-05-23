@@ -6,23 +6,29 @@ import tkinter as tk
 import tkinter.filedialog
 import tkinter.messagebox
 
+from threading import Timer
+
 from PySide6 import QtCharts
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Qt, QObject, Slot, QPointF
+from PySide6.QtCore import Qt, QObject, Slot, QPointF, Signal
 
 import PCT
 
 
 class Control(QObject):
+    tempSen1Res = Signal(str, arguments=['temperatureSensor1'])
+    tempSen2Res = Signal(str, arguments=['temperatureSensor2'])
+
     def __init__(self):
         super().__init__()
 
-        self.pct_data_read = False
+        self.timer = None
         self.pct_data = None
         self.path_open = None
         self.path_save = None
         self.data_array = []
+        self.count = 0
         self.pct = PCT.PCT()
         self.split_data = PCT.PCTData()
 
@@ -42,11 +48,17 @@ class Control(QObject):
     def update_series(self, series, dat):
         series.replace(dat)
 
+    @Slot(str)
+    def set_temperature_sensor1(self, arg):
+        self.tempSen1Res.emit(arg)
+
+    @Slot(str)
+    def set_temperature_sensor2(self, arg):
+        self.tempSen2Res.emit(arg)
+
     @Slot()
-    def data_process(
-            self, count, heartRate
-    ):
-        arr = self.data_array[count]
+    def data_process(self):
+        arr = self.data_array[self.count]
 
         if arr[0] == 0x10:
             if arr[1] == 0x02:
@@ -100,6 +112,9 @@ class Control(QObject):
                 # self.split_data.temp.temperature_sensor_status.append(temperature_sensor_status)
                 # self.split_data.temp.temperature_channel1.append(temperature_channel1)
                 # self.split_data.temp.temperature_channel2.append(temperature_channel2)
+
+                self.set_temperature_sensor1("T1 Connected")
+                self.set_temperature_sensor2("T2 Connected")
 
         if arr[0] == 0x13:
             if arr[1] == 0x02:
@@ -155,6 +170,7 @@ class Control(QObject):
                 pulse_rate = self.join_hex(arr[2], arr[3])
 
                 # self.split_data.nbp.pulse_rate.append(pulse_rate)
+        self.count += 1
 
     @Slot()
     def open_file(self):
@@ -168,11 +184,11 @@ class Control(QObject):
                 tkinter.messagebox.showerror('Error', 'This is neither a packed PCT CSV nor'
                                                       'an unpacked PCT CSV!')
         except ValueError:
-            self.pct_data_read = True
             for index, row in self.pct_data.iterrows():
                 arr = self.pct_data.loc[index].values
                 arr = list(map(int, arr))
                 self.data_array.append(arr)
+            self.timer.start()
 
     @Slot()
     def save_file(self):
@@ -192,6 +208,8 @@ if __name__ == "__main__":
     context = engine.rootContext()
     control = Control()
     context.setContextProperty("_Control", control)
+    t = Timer(0.1, control.data_process)
+    control.timer = t
 
     engine.load(os.fspath(Path(__file__).resolve().parent / "./ui/main.qml"))
 

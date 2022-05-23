@@ -10,15 +10,15 @@ ApplicationWindow {
     width: 1280
     height: 740
 
-     menuBar: MenuBar{
+    property int count : 0
+
+    menuBar: MenuBar{
         Menu {
             title: "File";
             MenuItem{
                 text: "Open CSV File"
                 onTriggered: {
-                    timer.running = false;
                     _Control.open_file();
-                    timer.running = true;
                 }
             }
             MenuItem{
@@ -50,15 +50,34 @@ ApplicationWindow {
         }
     }
 
-    /*
-    Timer {
-        id: timer
-        interval: 500; running: false; repeat: true
-        onTriggered: {
 
+
+    Connections {
+        target: _Control
+
+        // Signal Handler
+        /*
+        onTextRes: {
+            // textLabel - was given through arguments=['textLabel']
+            text.text = textLabel
+        }
+        onSerRes: {
+            text.text = qsTr("Transmitting")
+        }*/
+
+        onTempSen1Res: {
+            tempSen1.text = temperatureSensor1
+        }
+
+        onTempSen2Res: {
+            tempSen2.text = temperatureSensor2
+        }
+        onReadRes: {
+            if (readRes == "True") {
+                count += 1;
+            }
         }
     }
-    */
 
     Rectangle {
         id: rectangle5
@@ -365,7 +384,7 @@ ApplicationWindow {
         }
 
         Text {
-            id: textEdit2
+            id: systolicPressure
             x: 118
             y: 41
             width: 86
@@ -380,7 +399,7 @@ ApplicationWindow {
             y: 0
             width: 209
             height: 35
-            text: qsTr("无创血压                  mmgh")
+            text: qsTr("Non-Invasive Blood Pressure  mmgh")
             font.pixelSize: 12
         }
 
@@ -404,7 +423,7 @@ ApplicationWindow {
             font.pixelSize: 12
         }
         Text {
-            id: textEdit1
+            id: diastolicPressure
             x: 3
             y: 41
             width: 95
@@ -525,7 +544,7 @@ ApplicationWindow {
             y: 0
             width: 111
             height: 28
-            text: qsTr("体温 ℃")
+            text: qsTr("Temperature ℃")
             font.pixelSize: 12
         }
 
@@ -545,7 +564,7 @@ ApplicationWindow {
             y: 34
             width: 57
             height: 24
-            text: qsTr("Edit")
+            text: qsTr("--")
             font.pixelSize: 12
         }
 
@@ -565,27 +584,27 @@ ApplicationWindow {
             y: 64
             width: 58
             height: 24
-            text: qsTr("Edit")
+            text: qsTr("--")
             font.pixelSize: 12
         }
 
         Text {
-            id: element19
-            x: 146
+            id: tempSen1
+            x: 98
             y: 92
             width: 66
             height: 29
-            text: qsTr("T1导联")
+            text: qsTr("T1 Disconnected")
             font.pixelSize: 12
         }
 
         Text {
-            id: element20
-            x: 146
-            y: 127
+            id: tempSen2
+            x: 98
+            y: 119
             width: 66
             height: 38
-            text: qsTr("T2导联")
+            text: qsTr("T2 Disconnected")
             font.pixelSize: 12
         }
     }
