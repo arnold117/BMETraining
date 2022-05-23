@@ -8,29 +8,26 @@ ApplicationWindow {
     title:qsTr("Arnold's ParamMonitor")
     visible: true
     width: 1280
-    height: 720
-
-    property int timer: 0
-
-    background: Rectangle{
-        color: "#4d4747"
-        anchors.fill: parent
-    }
+    height: 740
 
      menuBar: MenuBar{
         Menu {
             title: "File";
             MenuItem{
-                text: "Open CSV File";
-                onTriggered: _Control.open_file();
+                text: "Open CSV File"
+                onTriggered: {
+                    timer.running = false;
+                    _Control.open_file();
+                    timer.running = true;
+                }
             }
             MenuItem{
-                text: "Save File";
-                onTriggered: _Control.save_file();
+                text: "Save File"
+                onTriggered: _Control.save_file()
             }
             MenuItem{
-                text: "Exit";
-                onTriggered: Qt.exit(0);
+                text: "Exit"
+                onTriggered: Qt.exit(0)
             }
         }
         Menu {
@@ -52,116 +49,23 @@ ApplicationWindow {
             }
         }
     }
-/*
-    Text {
-        id: info
-        color: "#cfcdcd"
-        text: qsTr("LED Control")
-        anchors{
-            horizontalCenter: parent.horizontalCenter
-            top: parent.top
-            topMargin: 40
-        }
 
-        font.bold: true
-        font.pointSize: 26
+    /*
+    Timer {
+        id: timer
+        interval: 500; running: false; repeat: true
+        onTriggered: {
+
+        }
     }
-
-    Item {
-        id: contains
-        anchors{
-            left: parent.left
-            top:parent.top
-            leftMargin: 260
-            topMargin: 150
-        }
-
-        Rectangle{
-            id:  ledOn
-            color: "#3061e0"
-            radius: 20
-            width: 140
-            height: 40
-            Text {
-                id:txOn
-                color: "#dbdbdb"
-                text: qsTr("On")
-                anchors.verticalCenter: parent.verticalCenter
-                font.pixelSize: 32
-                font.bold: true
-                anchors.horizontalCenter: parent.horizontalCenter
-
-            }
-            anchors{
-                top: stateOn.bottom
-                topMargin: 30
-                horizontalCenter: stateOn.horizontalCenter
-            }
-
-            MouseArea{
-                anchors.fill: parent
-                onPressed: {
-                    ledOn.color = "#f0f0f0"
-                }
-                onReleased: {
-                    ledOn.color = "#3061e0"
-                }
-                onClicked: {
-                    _Control.ledOn();
-                }
-            }
-        }
-
-    }
-
-    ChartView {
-        id: waveChartView
-        x: 22
-        y: 36
-        width: 591
-        height: 264
-        antialiasing: true
-        backgroundColor: "#9917719b"
-        animationOptions: ChartView.SeriesAnimations
-        legend.visible:false
-
-        ValueAxis {
-             id: myAxisX
-             min: 0
-             max: 10>timer? 10:timer+1
-             tickCount: 11
-             labelsColor: "#ffffff"
-             labelsFont.pointSize: 13
-             labelsFont.bold: true
-             labelFormat: '%d'
-             }
-        ValueAxis{
-            id:myAxisY
-            min:0
-            max:300
-            tickCount: 6
-            labelsColor: "#ffffff"
-            labelsFont.pointSize: 13
-            labelsFont.bold: true
-            labelFormat: '%d'
-        }
-
-        LineSeries {
-            id:lineSeries
-            axisX: myAxisX
-            axisY: myAxisY
-            name: "LineSeries"
-            color: "#00ffff"
-            width: 3
-        }
-    }*/
+    */
 
     Rectangle {
         id: rectangle5
         x: 37
         y: 30
-        width: 591
-        height: 87
+        width: 951
+        height: 145
         color: "#ffffff"
 
         ChartView {
@@ -209,9 +113,9 @@ ApplicationWindow {
     Rectangle {
         id: rectangle6
         x: 37
-        y: 145
-        width: 591
-        height: 87
+        y: 202
+        width: 951
+        height: 145
         color: "#ffffff"
 
         ChartView {
@@ -257,10 +161,10 @@ ApplicationWindow {
     }
     Rectangle {
         id: rectangle7
-        x: 37
-        y: 250
-        width: 591
-        height: 87
+        x: 40
+        y: 375
+        width: 948
+        height: 155
         color: "#ffffff"
 
         ChartView {
@@ -308,9 +212,9 @@ ApplicationWindow {
     Rectangle {
         id: rectangle8
         x: 37
-        y: 355
-        width: 591
-        height: 87
+        y: 549
+        width: 951
+        height: 155
         color: "#ffffff"
 
         ChartView {
@@ -357,32 +261,38 @@ ApplicationWindow {
 
     Rectangle {
         id: rectangle
-        x: 656
-        y: 27
-        width: 120
-        height: 87
+        x: 1028
+        y: 30
+        width: 212
+        height: 165
         color: "#ffffff"
 
         Text {
             id: element
             x: 0
             y: 0
-            text: qsTr("心率")
+            width: 64
+            height: 38
+            text: qsTr("Heart Rate")
             font.pixelSize: 12
         }
 
         Text {
             id: element1
-            x: 82
+            x: 152
             y: 0
-            text: qsTr("bgm")
+            width: 60
+            height: 38
+            text: qsTr("bpm")
             font.pixelSize: 12
         }
 
         Text {
             id: element2
             x: 0
-            y: 18
+            y: 38
+            width: 35
+            height: 23
             text: qsTr("RA")
             font.pixelSize: 12
         }
@@ -390,95 +300,163 @@ ApplicationWindow {
         Text {
             id: element3
             x: 0
-            y: 38
+            y: 67
+            width: 35
+            height: 29
             text: qsTr("LA")
             font.pixelSize: 12
         }
 
         Text {
             id: element5
-            x: 32
-            y: 58
+            x: 41
+            y: 120
+            width: 38
+            height: 29
             text: qsTr("V")
             font.pixelSize: 12
         }
 
-        TextEdit {
-            id: textEdit
-            x: 76
-            y: 18
-            width: 24
-            height: 20
+        Text {
+            id: heartRate
+            x: 152
+            y: 44
+            width: 52
+            height: 27
             text: "Edit"
+            font.pixelSize: 12
+        }
+        Text {
+            id: element4
+            x: 0
+            y: 120
+            width: 35
+            height: 33
+            text: qsTr("LL")
             font.pixelSize: 12
         }
     }
     Rectangle {
         id: rectangle1
-        x: 656
-        y: 140
-        width: 120
-        height: 87
+        x: 1028
+        y: 202
+        width: 212
+        height: 165
         color: "#ffffff"
 
-        TextEdit {
-            id: textEdit2
-            x: 70
-            y: 17
-            width: 30
-            height: 20
+        Text {
+            id: textEdit4
+            x: 72
+            y: 130
+            width: 82
+            height: 35
             text: qsTr("Edit")
             font.pixelSize: 12
         }
 
         Text {
+            id: textEdit3
+            x: 3
+            y: 88
+            width: 209
+            height: 30
+            text: qsTr("Text Edit")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: textEdit2
+            x: 118
+            y: 41
+            width: 86
+            height: 41
+            text: qsTr("Edit")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element6
+            x: 3
+            y: 0
+            width: 209
+            height: 35
+            text: qsTr("无创血压                  mmgh")
+            font.pixelSize: 12
+        }
+
+        Text {
             id: element8
-            x: 0
-            y: 75
+            x: 3
+            y: 130
+            width: 63
+            height: 35
             text: qsTr("手动")
             font.pixelSize: 12
-
-            TextEdit {
-                id: textEdit4
-                x: 26
-                y: 0
-                width: 45
-                height: 12
-                text: qsTr("Edit")
-                font.pixelSize: 12
-            }
         }
 
         Text {
             id: element9
-            x: 73
-            y: 75
-            text: qsTr("bgm")
+            x: 165
+            y: 133
+            width: 47
+            height: 32
+            text: qsTr("bpm")
+            font.pixelSize: 12
+        }
+        Text {
+            id: textEdit1
+            x: 3
+            y: 41
+            width: 95
+            height: 41
+            text: "Edit"
             font.pixelSize: 12
         }
     }
     Rectangle {
         id: rectangle2
-        x: 656
-        y: 246
-        width: 120
-        height: 87
+        x: 1028
+        y: 373
+        width: 212
+        height: 165
         color: "#ffffff"
+
+        Text {
+            id: textEdit5
+            x: 77
+            y: 52
+            width: 77
+            height: 48
+            text: qsTr("Edit")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element11
+            x: 100
+            y: 1
+            width: 112
+            height: 45
+            text: qsTr("脉率")
+            font.pixelSize: 12
+        }
 
         Text {
             id: element10
             x: 0
             y: 0
+            width: 94
+            height: 46
             text: qsTr("血氧")
             font.pixelSize: 12
         }
 
-        TextEdit {
+        Text {
             id: textEdit6
-            x: 46
-            y: 23
-            width: 24
-            height: 20
+            x: 0
+            y: 52
+            width: 64
+            height: 48
             text: qsTr("Edit")
             font.pixelSize: 12
         }
@@ -486,234 +464,169 @@ ApplicationWindow {
         Text {
             id: element12
             x: 0
-            y: 67
+            y: 120
+            width: 94
+            height: 45
             text: qsTr("手指链接")
             font.pixelSize: 12
         }
 
         Text {
             id: element13
-            x: 54
-            y: 67
+            x: 100
+            y: 120
+            width: 112
+            height: 45
             text: qsTr("探头链接")
             font.pixelSize: 12
         }
 
         Text {
             id: element14
-            x: 76
-            y: 23
+            x: 153
+            y: 52
+            width: 59
+            height: 48
             text: qsTr("bgm")
             font.pixelSize: 12
         }
     }
     Rectangle {
         id: rectangle3
-        x: 656
-        y: 351
-        width: 120
-        height: 87
+        x: 1028
+        y: 544
+        width: 212
+        height: 165
         color: "#ffffff"
 
         Text {
             id: element15
             x: 0
             y: 0
+            width: 87
+            height: 28
             text: qsTr("呼吸 bpm")
             font.pixelSize: 12
         }
 
-        TextEdit {
+        Text {
             id: textEdit7
             x: 0
-            y: 34
-            width: 48
-            height: 20
+            y: 43
+            width: 87
+            height: 73
             text: qsTr("Edit")
             font.pixelSize: 12
         }
 
         Text {
             id: element16
-            x: 54
+            x: 93
             y: 0
+            width: 111
+            height: 28
             text: qsTr("体温 ℃")
             font.pixelSize: 12
         }
 
         Text {
             id: element17
-            x: 54
-            y: 18
-            width: 18
-            height: 12
+            x: 93
+            y: 34
+            width: 56
+            height: 24
             text: qsTr("T1:")
             font.pixelSize: 12
         }
 
-        TextEdit {
-            id: textEdit8
-            x: 72
-            y: 18
-            width: 28
-            height: 12
+        Text {
+            id: tempC1
+            x: 155
+            y: 34
+            width: 57
+            height: 24
             text: qsTr("Edit")
             font.pixelSize: 12
         }
 
         Text {
             id: element18
-            x: 54
-            y: 34
-            width: 18
-            height: 12
+            x: 93
+            y: 64
+            width: 56
+            height: 24
             text: qsTr("T2:")
             font.pixelSize: 12
+        }
 
-            TextEdit {
-                id: textEdit9
-                x: 17
-                y: 0
-                width: 29
-                height: 12
-                text: qsTr("Edit")
-                font.pixelSize: 12
-            }
+        Text {
+            id: tempC2
+            x: 155
+            y: 64
+            width: 58
+            height: 24
+            text: qsTr("Edit")
+            font.pixelSize: 12
         }
 
         Text {
             id: element19
-            x: 54
-            y: 52
+            x: 146
+            y: 92
+            width: 66
+            height: 29
             text: qsTr("T1导联")
             font.pixelSize: 12
         }
 
         Text {
             id: element20
-            x: 54
-            y: 70
+            x: 146
+            y: 127
+            width: 66
+            height: 38
             text: qsTr("T2导联")
             font.pixelSize: 12
         }
     }
 
     Text {
-        id: element4
-        x: 656
-        y: 85
-        text: qsTr("LL")
-        font.pixelSize: 12
-    }
-
-    Text {
-        id: element6
-        x: 656
-        y: 140
-        text: qsTr("无创血压")
-        font.pixelSize: 12
-    }
-
-    Text {
-        id: element7
-        x: 732
-        y: 140
-        text: qsTr("mmhg")
-        font.pixelSize: 12
-    }
-
-    TextEdit {
-        id: textEdit1
-        x: 656
-        y: 158
-        width: 48
-        height: 20
-        text: "Edit"
-        font.pixelSize: 12
-
-        TextEdit {
-            id: textEdit3
-            x: 8
-            y: 20
-            width: 80
-            height: 20
-            text: qsTr("Text Edit")
-            font.pixelSize: 12
-        }
-    }
-
-    Text {
-        id: element11
-        x: 711
-        y: 246
-        text: qsTr("脉率")
-        font.pixelSize: 12
-    }
-
-    TextEdit {
-        id: textEdit5
-        x: 656
-        y: 269
-        width: 29
-        height: 20
-        text: qsTr("Edit")
-        font.pixelSize: 12
-    }
-
-    Text {
         id: element21
         x: 37
-        y: 14
+        y: 12
+        width: 36
+        height: 14
         text: qsTr("ECG1")
         font.pixelSize: 12
     }
 
     Text {
         id: element22
-        x: 37
-        y: 129
+        x: 36
+        y: 185
+        width: 43
+        height: 16
         text: qsTr("ECG2")
         font.pixelSize: 12
     }
 
     Text {
-        id: element23
-        x: 37
-        y: 234
-        font.pixelSize: 12
-    }
-
-    Text {
         id: element24
-        x: 37
-        y: 234
+        x: 39
+        y: 356
+        width: 34
+        height: 18
         text: qsTr("SPO2")
         font.pixelSize: 12
     }
 
     Text {
         id: element25
-        x: 37
-        y: 339
+        x: 36
+        y: 534
+        width: 67
+        height: 14
         text: qsTr("Res2")
         font.pixelSize: 12
-    }
-
-    Text {
-        id: element26
-        x: 0
-        y: 468
-        text: qsTr("串口未配置")
-        font.pixelSize: 12
-    }
-
-    Timer{
-        interval: 100
-        running: true
-        repeat: true
-        onTriggered: {
-            lineSeries.append(timer,Math.random()*50)
-            timer = timer+1
-        }
     }
 }
