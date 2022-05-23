@@ -56,12 +56,79 @@ ApplicationWindow {
         target: _Control
 
         // Signal Handler
+        onEcg1WaveRes: {
+            _Control.update_ecg1_series(ecg1Series)
+        }
+
+        onEcg2WaveRes: {
+            _Control.update_ecg2_series(ecg2Series)
+        }
+
+        onRaStatusRes: {
+            raStauts.text = getRaStatus
+        }
+
+        onLaStatusRes: {
+            laStauts.text = getLaStatus
+        }
+
+        onLlStatusRes: {
+            llStauts.text = getLlStatus
+        }
+
+        onVStatusRes: {
+            vStauts.text = getVStatus
+        }
+
+        onHeartRateRes: {
+            heartRate.text = getHeartRate
+        }
+
+
         onRespirationWaveRes: {
             _Control.update_respiration_series(respSeries)
         }
 
         onRespirationRateRes: {
             respRate.text = getRespirationRate
+        }
+
+
+        onTempSen1Res: {
+            tempSen1.text = getTempSen1
+        }
+
+        onTempSen2Res: {
+            tempSen2.text = getTempSen2
+        }
+
+        onTemp1Res: {
+            tempC1.text = getT1
+        }
+
+        onTemp2Res: {
+            tempC2.text = getT2
+        }
+
+
+        onSpo2WaveRes: {
+            _Control.update_spo2_series(spo2Series)
+        }
+
+        onFingerInfoRes: {
+            fingerInfo.text = getFingerInfo
+        }
+
+        onProbeInfoRes: {
+            probeInfo.text = getProbeInfo
+        }
+
+        onSpo2RateRes: {
+            spo2Rate.text = getSpo2Rate
+        }
+
+        onSpo2DataRes: {
+            spo2Data.text = getSpo2Data
         }
 
 
@@ -84,23 +151,6 @@ ApplicationWindow {
         onNbpRateRes: {
             nbpRate.text = getNbpRate
         }
-
-
-        onTempSen1Res: {
-            tempSen1.text = getTempSen1
-        }
-
-        onTempSen2Res: {
-            tempSen2.text = getTempSen2
-        }
-
-        onTemp1Res: {
-            tempC1.text = getT1
-        }
-
-        onTemp2Res: {
-            tempC2.text = getT2
-        }
     }
 
     Rectangle {
@@ -116,15 +166,14 @@ ApplicationWindow {
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
-            animationOptions: ChartView.SeriesAnimations
             legend{
                 visible: false
             }
 
             ValueAxis {
-                id: myAxisX1
+                id: ecg1AxisX
                 min: 0
-                max: 10
+                max: 1000
                 tickCount: 11
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -132,9 +181,9 @@ ApplicationWindow {
                 labelFormat: '%d'
                 }
             ValueAxis{
-                id:myAxisY1
-                min:0
-                max:300
+                id: ecg1AxisY
+                min: 1500
+                max: 3000
                 tickCount: 6
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -144,8 +193,8 @@ ApplicationWindow {
 
             LineSeries {
                 id: ecg1Series
-                axisX: myAxisX1
-                axisY: myAxisY1
+                axisX: ecg1AxisX
+                axisY: ecg1AxisY
                 name: "LineSeries"
                 color: "#00ffff"
                 width: 3
@@ -166,15 +215,14 @@ ApplicationWindow {
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
-            animationOptions: ChartView.SeriesAnimations
             legend{
                 visible: false
             }
 
             ValueAxis {
-                id: myAxisX
+                id: ecg2AxisX
                 min: 0
-                max: 10
+                max: 1000
                 tickCount: 11
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -182,9 +230,9 @@ ApplicationWindow {
                 labelFormat: '%d'
                 }
             ValueAxis{
-                id:myAxisY
-                min:0
-                max:300
+                id: ecg2AxisY
+                min: 1500
+                max: 3000
                 tickCount: 6
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -194,14 +242,15 @@ ApplicationWindow {
 
             LineSeries {
                 id: ecg2Series
-                axisX: myAxisX
-                axisY: myAxisY
+                axisX: ecg2AxisX
+                axisY: ecg2AxisY
                 name: "LineSeries"
                 color: "#00ffff"
                 width: 3
             }
         }
     }
+
     Rectangle {
         id: spo2Rect
         x: 40
@@ -215,15 +264,14 @@ ApplicationWindow {
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
-            animationOptions: ChartView.SeriesAnimations
             legend{
                 visible: false
             }
 
             ValueAxis {
-                id: myAxisX2
+                id: spo2AxisX
                 min: 0
-                max: 10
+                max: 1000
                 tickCount: 11
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -231,9 +279,9 @@ ApplicationWindow {
                 labelFormat: '%d'
                 }
             ValueAxis{
-                id:myAxisY2
-                min:0
-                max:300
+                id: spo2AxisY
+                min:45
+                max:200
                 tickCount: 6
                 labelsColor: "#ffffff"
                 labelsFont.pointSize: 13
@@ -243,8 +291,8 @@ ApplicationWindow {
 
             LineSeries {
                 id: spo2Series
-                axisX: myAxisX2
-                axisY: myAxisY2
+                axisX: spo2AxisX
+                axisY: spo2AxisY
                 name: "LineSeries"
                 color: "#00ffff"
                 width: 3
@@ -265,7 +313,6 @@ ApplicationWindow {
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
-            // animationOptions: ChartView.SeriesAnimations
             legend{
                 visible: false
             }
@@ -331,32 +378,32 @@ ApplicationWindow {
         }
 
         Text {
-            id: element2
+            id: raStauts
             x: 0
             y: 38
             width: 35
             height: 23
-            text: qsTr("RA")
+            text: qsTr("Offline")
             font.pixelSize: 12
         }
 
         Text {
-            id: element3
+            id: laStatus
             x: 0
-            y: 67
+            y: 77
             width: 35
             height: 29
-            text: qsTr("LA")
+            text: qsTr("Offline")
             font.pixelSize: 12
         }
 
         Text {
-            id: element5
-            x: 41
+            id: vStatus
+            x: 70
             y: 120
             width: 38
             height: 29
-            text: qsTr("V")
+            text: qsTr("Offline")
             font.pixelSize: 12
         }
 
@@ -366,19 +413,20 @@ ApplicationWindow {
             y: 44
             width: 52
             height: 27
-            text: "Edit"
+            text: "--"
             font.pixelSize: 12
         }
         Text {
-            id: element4
+            id: llStatus
             x: 0
             y: 120
             width: 35
             height: 33
-            text: qsTr("LL")
+            text: qsTr("Offline")
             font.pixelSize: 12
         }
     }
+
     Rectangle {
         id: nbpArea
         x: 1028
@@ -458,6 +506,7 @@ ApplicationWindow {
             font.pixelSize: 12
         }
     }
+
     Rectangle {
         id: spo2Area
         x: 1028
@@ -467,12 +516,12 @@ ApplicationWindow {
         color: "#ffffff"
 
         Text {
-            id: textEdit5
+            id: spo2Rate
             x: 77
             y: 52
             width: 77
             height: 48
-            text: qsTr("Edit")
+            text: qsTr("--")
             font.pixelSize: 12
         }
 
@@ -482,7 +531,7 @@ ApplicationWindow {
             y: 1
             width: 112
             height: 45
-            text: qsTr("脉率")
+            text: qsTr("Pulse Rate")
             font.pixelSize: 12
         }
 
@@ -492,37 +541,37 @@ ApplicationWindow {
             y: 0
             width: 94
             height: 46
-            text: qsTr("血氧")
+            text: qsTr("SpO2")
             font.pixelSize: 12
         }
 
         Text {
-            id: textEdit6
+            id: spo2Data
             x: 0
             y: 52
             width: 64
             height: 48
-            text: qsTr("Edit")
+            text: qsTr("--")
             font.pixelSize: 12
         }
 
         Text {
-            id: element12
+            id: fingerInfo
             x: 0
             y: 120
             width: 94
             height: 45
-            text: qsTr("手指链接")
+            text: qsTr("Finger Offline")
             font.pixelSize: 12
         }
 
         Text {
-            id: element13
+            id: probeInfo
             x: 100
             y: 120
             width: 112
             height: 45
-            text: qsTr("探头链接")
+            text: qsTr("Probe Offline")
             font.pixelSize: 12
         }
 
@@ -532,7 +581,17 @@ ApplicationWindow {
             y: 52
             width: 59
             height: 48
-            text: qsTr("bgm")
+            text: qsTr("bpm")
+            font.pixelSize: 12
+        }
+
+        Text {
+            id: element19
+            x: 35
+            y: 52
+            width: 29
+            height: 19
+            text: qsTr("%")
             font.pixelSize: 12
         }
     }

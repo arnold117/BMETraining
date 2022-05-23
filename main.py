@@ -6,31 +6,42 @@ import tkinter as tk
 import tkinter.filedialog
 import tkinter.messagebox
 
-from threading import Timer
-from turtle import st
-
 from PySide6 import QtCharts
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Qt, QObject, Slot, QPointF, Signal, QTimer
+from PySide6.QtCore import QObject, Slot, QPointF, Signal, QTimer
 
 import PCT
 
 
 class Control(QObject):
-    respirationWaveRes = Signal(str, arguments=['getRespirationWave'])
+    ecg1WaveRes = Signal(str)
+    ecg2WaveRes = Signal(str)
+    raStatusRes = Signal(str, arguments=['getRaStatus'])
+    laStatusRes = Signal(str, arguments=['getLaStatus'])
+    llStatusRes = Signal(str, arguments=['getLlStatus'])
+    vStatusRes = Signal(str, arguments=['getVStatus'])
+    hearRateRes = Signal(str, arguments=['getHeartRate'])
+
+    tempSen1Res = Signal(str, arguments=['getTempSen1'])
+    tempSen2Res = Signal(str, arguments=['getTempSen2'])
+    temp1Res = Signal(str, arguments=['getT1'])
+    temp2Res = Signal(str, arguments=['getT2'])
+
+    respirationWaveRes = Signal(str)
     respirationRateRes = Signal(str, arguments=['getRespirationRate'])
+
+    spo2WaveRes = Signal(str)
+    fingerInfoRes = Signal(str, arguments=['getFingerInfo'])
+    probeInfoRes = Signal(str, arguments=['getProbeInfo'])
+    spo2RateRes = Signal(str, arguments=['getSpo2Rate'])
+    spo2DataRes = Signal(str, arguments=['getSpo2Data'])
 
     cuffPressureRes = Signal(str, arguments=['getCuffPressure'])
     nbpMethodRes = Signal(str, arguments=['getNbpMethod'])
     pressureRes = Signal(str, arguments=['getPressure'])
     meanPressureRes = Signal(str, arguments=['getMeanPressure'])
     nbpRateRes = Signal(str, arguments=['getNbpRate'])
-
-    tempSen1Res = Signal(str, arguments=['getTempSen1'])
-    tempSen2Res = Signal(str, arguments=['getTempSen2'])
-    temp1Res = Signal(str, arguments=['getT1'])
-    temp2Res = Signal(str, arguments=['getT2'])
 
     def __init__(self):
         super().__init__()
@@ -45,8 +56,14 @@ class Control(QObject):
         self.pct = PCT.PCT()
 
         self.timer.timeout.connect(self.data_process)
+        self.ecg1_wave = []
+        self.ecg1_wave_x = 0
+        self.ecg2_wave = []
+        self.ecg2_wave_x = 0
         self.respiration_wave = []
         self.respiration_wave_x = 0
+        self.spo2_wave = []
+        self.spo2_wave_x = 0
 
     @Slot()
     def join_hex(self, data_high, data_low):
@@ -56,9 +73,41 @@ class Control(QObject):
     def about_page(self):
         tkinter.messagebox.showinfo('About', 'Copyright (c) 2022 Arnold Chow, All rights reserved')
 
+    @Slot(str)
+    def set_ecg1_wave(self):
+        self.ecg1WaveRes.emit("Triggered")
+
     @Slot(QtCharts.QXYSeries)
-    def update_series(self, series, dat):
-        series.replace(dat)
+    def update_ecg1_series(self, series):
+        series.replace(self.ecg1_wave)
+
+    @Slot(str)
+    def set_ecg2_wave(self):
+        self.ecg2WaveRes.emit("Triggered")
+
+    @Slot(QtCharts.QXYSeries)
+    def update_ecg2_series(self, series):
+        series.replace(self.ecg2_wave)
+
+    @Slot(str)
+    def set_ra_status(self, arg):
+        self.raStatusRes.emit(arg)
+
+    @Slot(str)
+    def set_la_status(self, arg):
+        self.laStatusRes.emit(arg)
+
+    @Slot(str)
+    def set_ll_status(self, arg):
+        self.llStatusRes.emit(arg)
+
+    @Slot(str)
+    def set_v_status(self, arg):
+        self.vStatusRes.emit(arg)
+
+    @Slot(str)
+    def set_heart_rate(self, arg):
+        self.hearRateRes.emit(arg)
 
     @Slot(str)
     def set_respiration_wave(self):
@@ -71,6 +120,46 @@ class Control(QObject):
     @Slot(str)
     def set_respiration_rate(self, arg):
         self.respirationRateRes.emit(arg)
+
+    @Slot(str)
+    def set_temperature_sensor1(self, arg):
+        self.tempSen1Res.emit(arg)
+
+    @Slot(str)
+    def set_temperature_sensor2(self, arg):
+        self.tempSen2Res.emit(arg)
+
+    @Slot(str)
+    def set_t1(self, arg):
+        self.temp1Res.emit(arg)
+
+    @Slot(str)
+    def set_t2(self, arg):
+        self.temp2Res.emit(arg)
+
+    @Slot(str)
+    def set_spo2_wave(self):
+        self.spo2WaveRes.emit("Triggered")
+
+    @Slot(QtCharts.QXYSeries)
+    def update_spo2_series(self, series):
+        series.replace(self.spo2_wave)
+
+    @Slot(str)
+    def set_finger_info(self, arg):
+        self.fingerInfoRes.emit(arg)
+
+    @Slot(str)
+    def set_probe_info(self, arg):
+        self.probeInfoRes.emit(arg)
+
+    @Slot(str)
+    def set_spo2_rate(self, arg):
+        self.spo2RateRes.emit(arg)
+
+    @Slot(str)
+    def set_spo2_data(self, arg):
+        self.spo2DataRes.emit(arg)
 
     @Slot(str)
     def set_cuff_pressure(self, arg):
@@ -92,22 +181,6 @@ class Control(QObject):
     def set_nbp_rate(self, arg):
         self.nbpRateRes.emit(arg)
 
-    @Slot(str)
-    def set_temperature_sensor1(self, arg):
-        self.tempSen1Res.emit(arg)
-
-    @Slot(str)
-    def set_temperature_sensor2(self, arg):
-        self.tempSen2Res.emit(arg)
-
-    @Slot(str)
-    def set_t1(self, arg):
-        self.temp1Res.emit(arg)
-
-    @Slot(str)
-    def set_t2(self, arg):
-        self.temp2Res.emit(arg)
-
     @Slot()
     def data_process(self):
         arr = self.data_array[self.count]
@@ -119,21 +192,39 @@ class Control(QObject):
                 ECG2_wave = self.join_hex(arr[4], arr[5])
                 ECG_status = arr[6]
 
-                # self.split_data.ecg.ECG1_wave.append(ECG1_wave)
-                # self.split_data.ecg.ECG2_wave.append(ECG2_wave)
-                # self.split_data.ecg.ECG_status.append(ECG_status)
+                if self.ecg1_wave_x < 1000:
+                    point = QPointF(self.ecg1_wave_x, ECG1_wave)
+                    self.ecg1_wave.append(point)
+                    self.ecg1_wave_x += 1
+                else:
+                    self.ecg1_wave_x = 0
+                    self.ecg1_wave = []
+                self.set_ecg1_wave()
+
+                if self.ecg2_wave_x < 1000:
+                    point = QPointF(self.ecg2_wave_x, ECG2_wave)
+                    self.ecg2_wave.append(point)
+                    self.ecg2_wave_x += 1
+                else:
+                    self.ecg2_wave_x = 0
+                    self.ecg2_wave = []
+                self.set_ecg2_wave()
+
             if arr[1] == 0x03:
                 data_type = "DAT_EEG_LEAD"
                 lead_info = arr[2]
                 overload_warning = arr[3]
+                if lead_info == 0x0:
+                    self.set_ra_status("RA")
+                    self.set_la_status("LA")
+                    self.set_ll_status("LL")
+                    self.set_v_status("V")
 
-                # self.split_data.ecg.lead_info.append(lead_info)
-                # self.split_data.ecg.overload_warning.append(overload_warning)
             if arr[1] == 0x04:
                 data_type = "DAT_EEG_HR"
                 heart_rate = self.join_hex(arr[2], arr[3])
 
-                # self.split_data.ecg.heart_rate.append(heart_rate)
+                self.set_heart_rate(str(heart_rate))
 
         if arr[0] == 0x11:
             if arr[1] == 0x02:
@@ -174,27 +265,33 @@ class Control(QObject):
         if arr[0] == 0x13:
             if arr[1] == 0x02:
                 data_type = "DAT_SPO2_WAVE"
-                o2_wave_data1 = arr[2]
-                o2_wave_data2 = arr[3]
-                o2_wave_data3 = arr[4]
-                o2_wave_data4 = arr[5]
-                o2_wave_data5 = arr[6]
                 o2_measure_status = arr[7]
+                o2_wave_data = []
+                i = 2
+                while i < 7:
+                    o2_wave_data.append(arr[i])
+                    point = QPointF(self.spo2_wave_x, arr[i])
+                    self.spo2_wave.append(point)
+                    i += 1
+                    self.spo2_wave_x += 1
+                self.set_spo2_wave()
 
-                # i = 2
-                # while i < 7:
-                #     self.split_data.spo2.o2_wave_data.append(arr[i])
-                #     i += 1
-                # self.split_data.spo2.o2_measure_status.append(o2_measure_status)
+                if self.spo2_wave_x >= 1000:
+                    self.spo2_wave_x = 0
+                    self.spo2_wave = []
+
+                if not (o2_measure_status & 0b10000) and (not (o2_measure_status & 0b10000000)):
+                    self.set_finger_info("Finger Online")
+                    self.set_probe_info("Probe Online")
+
             if arr[1] == 0x03:
                 data_type = "DAT_SPO2_DATA"
                 o2_saturate_info = arr[2]
                 pulse_rate = self.join_hex(arr[3], arr[4])
                 o2_saturate_data = arr[5]
 
-                # self.split_data.spo2.o2_saturate_info.append(o2_saturate_info)
-                # self.split_data.spo2.pulse_rate.append(pulse_rate)
-                # self.split_data.spo2.o2_saturate_data.append(o2_saturate_data)
+                self.set_spo2_rate(str(pulse_rate))
+                self.set_spo2_data(str(o2_saturate_data))
 
         if arr[0] == 0x14:
             if arr[1] == 0x02:
