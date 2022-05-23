@@ -5,28 +5,17 @@ import sys
 import random
 
 from PySide6 import QtCharts
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QTextEdit
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import Qt, QObject, Slot, QPointF, Property
+from PySide6.QtCore import Qt, QObject, Slot, QPointF, Property, Signal
 
 
 class DataModel(QObject):
-    textChanged = Slot(str)
+    textRes = Signal(str, arguments=['textLabel'])
+    serRes = Signal(str, arguments=['ser'])
 
     def __init__(self, parent=None):
         QObject.__init__(self, parent)
-        self.m_text = ""
-
-    @Property(str, notify=textChanged)
-    def text(self):
-        return self.m_text
-
-    @text.setter
-    def setText(self, text):
-        if self.m_text == text:
-            return
-        self.m_text = text
-        self.textChanged.emit(self.m_text)
 
     @Slot(QtCharts.QXYSeries)
     def update_serie(self, serie):
@@ -40,11 +29,13 @@ class DataModel(QObject):
             points.append(point)
         # replace points
         serie.replace(points)
+        self.serRes.emit(points)
 
-    @Slot()
-    def change(self, item):
-        width = 300
-        item = width
+    @Slot(str)
+    def change_text(self, arg1):
+        # do something with the text and emit a signal
+        # arg1 = arg1.upper()
+        self.textRes.emit(arg1)
 
 
 if __name__ == "__main__":

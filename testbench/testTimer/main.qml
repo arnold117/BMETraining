@@ -23,9 +23,9 @@ ApplicationWindow {
                 }
             }
             MenuItem {
-                text: "Change Width"
+                text: "Change Text"
                 onTriggered: {
-                    dataModel.change(root.width)
+                    dataModel.change_text("fuck")
                 }
             }
         }
@@ -54,6 +54,29 @@ ApplicationWindow {
             name: "Test"
             axisX: axisx
             axisY: axisy
+        }
+    }
+
+    Text {
+        id: text
+        x: 260
+        y: 22
+        width: 80
+        height: 20
+        text: qsTr("Text Edit")
+        font.pixelSize: 12
+    }
+
+    Connections {
+        target: dataModel
+
+        // Signal Handler
+        onTextRes: {
+            // textLabel - was given through arguments=['textLabel']
+            text.text = textLabel
+        }
+        onSerRes: {
+            text.text = qsTr("Transmitting")
         }
     }
 }
