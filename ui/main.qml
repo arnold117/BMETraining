@@ -56,31 +56,46 @@ ApplicationWindow {
         target: _Control
 
         // Signal Handler
-        /*
-        onTextRes: {
-            // textLabel - was given through arguments=['textLabel']
-            text.text = textLabel
+        onCuffPressureRes: {
+            cuffPreasure.text = getCuffPressure
         }
-        onSerRes: {
-            text.text = qsTr("Transmitting")
-        }*/
+
+        onNbpMethodRes: {
+            nbpMethod.text = getNbpMethod
+        }
+
+        onPressureRes: {
+            pressure.text = getPressure
+        }
+
+        onMeanPressureRes: {
+            meanPressure.text = getMeanPressure
+        }
+
+        onNbpRateRes: {
+            nbpRate.text = getNbpRate
+        }
+
 
         onTempSen1Res: {
-            tempSen1.text = temperatureSensor1
+            tempSen1.text = getTempSen1
         }
 
         onTempSen2Res: {
-            tempSen2.text = temperatureSensor2
+            tempSen2.text = getTempSen2
         }
-        onReadRes: {
-            if (readRes == "True") {
-                count += 1;
-            }
+
+        onTemp1Res: {
+            tempC1.text = getT1
+        }
+
+        onTemp2Res: {
+            tempC2.text = getT2
         }
     }
 
     Rectangle {
-        id: rectangle5
+        id: ecgRect1
         x: 37
         y: 30
         width: 951
@@ -88,7 +103,7 @@ ApplicationWindow {
         color: "#ffffff"
 
         ChartView {
-            id: waveChartView1
+            id: ecgChart1
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
@@ -130,7 +145,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        id: rectangle6
+        id: ecgRect2
         x: 37
         y: 202
         width: 951
@@ -138,7 +153,7 @@ ApplicationWindow {
         color: "#ffffff"
 
         ChartView {
-            id: waveChartView
+            id: ecgChart2
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
@@ -179,7 +194,7 @@ ApplicationWindow {
         }
     }
     Rectangle {
-        id: rectangle7
+        id: spo2Rect
         x: 40
         y: 375
         width: 948
@@ -187,7 +202,7 @@ ApplicationWindow {
         color: "#ffffff"
 
         ChartView {
-            id: waveChartView2
+            id: spo2Chart
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
@@ -229,7 +244,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        id: rectangle8
+        id: respRect
         x: 37
         y: 549
         width: 951
@@ -237,7 +252,7 @@ ApplicationWindow {
         color: "#ffffff"
 
         ChartView {
-            id: waveChartView3
+            id: respChart
             anchors.fill: parent
             antialiasing: true
             backgroundColor: "#9917719b"
@@ -279,7 +294,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        id: rectangle
+        id: ecgArea
         x: 1028
         y: 30
         width: 212
@@ -356,7 +371,7 @@ ApplicationWindow {
         }
     }
     Rectangle {
-        id: rectangle1
+        id: nbpArea
         x: 1028
         y: 202
         width: 212
@@ -364,32 +379,34 @@ ApplicationWindow {
         color: "#ffffff"
 
         Text {
-            id: textEdit4
+            id: nbpRate
             x: 72
             y: 130
             width: 82
             height: 35
-            text: qsTr("Edit")
+            text: qsTr("--")
             font.pixelSize: 12
         }
 
         Text {
-            id: textEdit3
+            id: pressure
             x: 3
             y: 88
             width: 209
             height: 30
-            text: qsTr("Text Edit")
+            text: qsTr("--/--")
+            horizontalAlignment: Text.AlignHCenter
             font.pixelSize: 12
         }
 
         Text {
-            id: systolicPressure
+            id: meanPressure
             x: 118
             y: 41
             width: 86
             height: 41
-            text: qsTr("Edit")
+            text: qsTr("--")
+            horizontalAlignment: Text.AlignRight
             font.pixelSize: 12
         }
 
@@ -404,12 +421,12 @@ ApplicationWindow {
         }
 
         Text {
-            id: element8
+            id: nbpMethod
             x: 3
             y: 130
             width: 63
             height: 35
-            text: qsTr("手动")
+            text: qsTr("Manual")
             font.pixelSize: 12
         }
 
@@ -423,17 +440,17 @@ ApplicationWindow {
             font.pixelSize: 12
         }
         Text {
-            id: diastolicPressure
+            id: cuffPreasure
             x: 3
             y: 41
             width: 95
             height: 41
-            text: "Edit"
+            text: "--"
             font.pixelSize: 12
         }
     }
     Rectangle {
-        id: rectangle2
+        id: spo2Area
         x: 1028
         y: 373
         width: 212
@@ -511,7 +528,7 @@ ApplicationWindow {
         }
     }
     Rectangle {
-        id: rectangle3
+        id: respTempArea
         x: 1028
         y: 544
         width: 212
@@ -534,7 +551,9 @@ ApplicationWindow {
             y: 43
             width: 87
             height: 73
-            text: qsTr("Edit")
+            text: qsTr("--")
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
             font.pixelSize: 12
         }
 
