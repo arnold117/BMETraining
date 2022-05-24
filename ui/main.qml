@@ -65,19 +65,19 @@ ApplicationWindow {
         }
 
         onRaStatusRes: {
-            raStauts.text = getRaStatus
+            raStatus.text = getRaStatus
         }
 
         onLaStatusRes: {
-            laStauts.text = getLaStatus
+            laStatus.text = getLaStatus
         }
 
         onLlStatusRes: {
-            llStauts.text = getLlStatus
+            llStatus.text = getLlStatus
         }
 
         onVStatusRes: {
-            vStauts.text = getVStatus
+            vStatus.text = getVStatus
         }
 
         onHeartRateRes: {
@@ -133,7 +133,7 @@ ApplicationWindow {
 
 
         onCuffPressureRes: {
-            cuffPreasure.text = getCuffPressure
+            cuffPressure.text = getCuffPressure
         }
 
         onNbpMethodRes: {
@@ -378,7 +378,7 @@ ApplicationWindow {
         }
 
         Text {
-            id: raStauts
+            id: raStatus
             x: 0
             y: 38
             width: 35
@@ -497,7 +497,7 @@ ApplicationWindow {
             font.pixelSize: 12
         }
         Text {
-            id: cuffPreasure
+            id: cuffPressure
             x: 3
             y: 41
             width: 95

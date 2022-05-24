@@ -21,7 +21,7 @@ class Control(QObject):
     laStatusRes = Signal(str, arguments=['getLaStatus'])
     llStatusRes = Signal(str, arguments=['getLlStatus'])
     vStatusRes = Signal(str, arguments=['getVStatus'])
-    hearRateRes = Signal(str, arguments=['getHeartRate'])
+    heartRateRes = Signal(str, arguments=['getHeartRate'])
 
     tempSen1Res = Signal(str, arguments=['getTempSen1'])
     tempSen2Res = Signal(str, arguments=['getTempSen2'])
@@ -107,7 +107,7 @@ class Control(QObject):
 
     @Slot(str)
     def set_heart_rate(self, arg):
-        self.hearRateRes.emit(arg)
+        self.heartRateRes.emit(arg)
 
     @Slot(str)
     def set_respiration_wave(self):
