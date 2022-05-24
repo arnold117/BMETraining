@@ -356,7 +356,7 @@ class Control(QObject):
     def save_file(self):
         self.path_save = tkinter.filedialog.asksaveasfilename(initialfile='saved_data.csv',
                                                               filetypes=[("CSV Files", ".csv")])
-        print(self.path_save)
+        self.pct.save_unpacked_csv(self.pct_data, self.path_save)
 
 
 if __name__ == "__main__":

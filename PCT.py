@@ -200,6 +200,9 @@ class PCT:
         except:
             return [0, 0, 0, 0, 0, 0, 0, 0]
 
+    def save_unpacked_csv(self, obj, path):
+        obj.to_csv(path, index=False)
+
 
 class PCTData:
     class ECG:
